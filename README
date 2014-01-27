@@ -1,0 +1,11 @@
+Syntax:
+	gamma <value>
+	brightness <value>
+	
+`gamma` sets the gamma and brightness for all connected displays to the given value.
+`brightness` sets only the brightness for all connected displays to the given value.
+
+If you want `gamma` to only set the gamme, edit the script and remove the "--brightness $1" parameter
+
+Requires:
+	xrandr

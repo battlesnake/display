@@ -1,0 +1,8 @@
+#!/bin/bash
+
+[ "$1" ] && VALUE=$1 || VALUE=1.0
+
+for OUTPUT in `xrandr -q | grep ' connected' | cut -f1 -d' '`
+do
+	xrandr --output "$OUTPUT" --brightness "$VALUE"
+done
