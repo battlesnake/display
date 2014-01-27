@@ -7,5 +7,7 @@ Syntax:
 
 If you want `gamma` to only set the gamme, edit the script and remove the "--brightness $1" parameter
 
+Install to $PATH (e.g. /usr/bin on Arch) to allow easy access via shell / "run bar"
+
 Requires:
 	xrandr
