@@ -1,8 +1,71 @@
 #!/bin/bash
 
-[ "$1" ] && VALUE=$1 || VALUE=1.0
+DISPLAYS=( `xrandr -q | grep ' connected' | cut -f1 -d' ' | sort` )
 
-for OUTPUT in `xrandr -q | grep ' connected' | cut -f1 -d' '`
+if ! (( ${#DISPLAYS[@]} ))
+then
+	echo "No displays detected" >&2
+	exit 1
+fi
+
+function assign {
+	local VAL=$2
+	if [ "$(1##*:*}" ]
+	then
+		VAL="$2:$2:$2"
+	fi
+	xrandr --output "$1" --gamma "$VAL" &
+}
+
+if [ "$#" == 0 ]
+then
+	for DISP in ${DISPLAYS[@]}
+	do
+		assign $DISP 1.0
+	done
+	exit 0
+elif [ "$#" == 1 ] && [ "${1##*=*}" ]
+then
+	for DISP in ${DISPLAYS[@]}
+	do
+		assign $DISP $1
+	done
+	exit 0
+fi
+
+declare -A VALS
+
+while (( "$#" ))
 do
-	xrandr --output "$OUTPUT" --gamma $1:$1:$1
+	ARG=$1
+	DISP=${ARG%=*}
+	VAL=${ARG#*=}
+	if [ "$VAL" == "$ARG" ] || [ -z "$DISP" ] || [ "$DISP" == 0 ]
+	then
+		{
+			echo -e "Invalid syntax near '$ARG'"
+			echo "Examples:"
+			echo -e "\t* gamma\n\t\treset all to 1.0\n"
+			echo -e "\t* gamma 0.6\n\t\tset all to 0.6\n"
+			echo -e "\t* gamma 1=0.7 2= 3=0.4\n\t\tset first to 0.7, second to 1.0, third to 0.4\n"
+		} >&2
+		exit 1
+	fi
+
+	if [ -z "$VAL" ]
+	then
+		VAL=1.0
+	fi
+
+	((DISP--))
+
+	VALS[$DISP]=$VAL
+
+	shift
+done
+
+for DISP in "${!VALS[@]}"
+do
+	VAL=${VALS[$DISP]}
+	assign ${DISPLAYS[$DISP]} $VAL
 done

@@ -1,11 +1,23 @@
 Syntax:
-	gamma <value>
-	brightness <value>
+	<command> [<value>] - set all displays
+	<command> <index=[value]> [<index=[value]> ...] - set specific displays
 	
-`gamma` sets the gamma for all connected displays to the given value.
-`brightness` sets only the brightness for all connected displays to the given value.
-
-Install to $PATH (e.g. /usr/bin on Arch) to allow easy access via shell / "run bar"
+Commands:
+	gamma - set display gamma
+	brightness - set display brightness
+	
+Index:
+	1 is first connected display
+	2 is second connected display
+	etc...
+	
+Value:
+	brightness: decimal, e.g. 0.3 (default is 1.0 if unspecified)
+	gamma: decimal or triplet (e.g. 0.3:0.5:0.8 as R:G:B)
+	
+Install to $PATH (e.g. /usr/bin on Arch) to allow easy access via shell or DE run bar
 
 Requires:
 	xrandr
+	bash 4+
+	gnu coreutils (grep, cut, sort)
