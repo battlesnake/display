@@ -10,7 +10,7 @@ fi
 
 function assign {
 	local VAL=$2
-	if [ "$(1##*:*}" ]
+	if [ "$(1##*:*)" ]
 	then
 		VAL="$2:$2:$2"
 	fi
